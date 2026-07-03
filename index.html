@@ -281,11 +281,10 @@
     </div>
 
     <!-- =========================================================================
-       SCRIPT OPTIMIZADO: INYECTA LOS BOTONES LOCALES EN LA NUEVA PESTAÑA
+       SCRIPT OPTIMIZADO: ELIMINA BOTONES ANTERIORES E INYECTA LA BOTONERA LIMPIA
        ========================================================================= -->
     <script>
         function abrirTaller(urlArchivo) {
-            // 1. Abrimos la pestaña nueva en blanco primero para tener el control del objeto 'window'
             const nuevaVentana = window.open(urlArchivo, '_blank');
 
             if (!nuevaVentana) {
@@ -293,9 +292,17 @@
                 return;
             }
 
-            // 2. Esperamos a que la pestaña termine de cargar el HTML del taller para inyectarle las acciones
             nuevaVentana.addEventListener('load', function() {
                 const doc = nuevaVentana.document;
+
+                // --- NUEVO: Detectar y eliminar automáticamente los botones obsoletos del taller ---
+                const todosLosBotones y Enlaces = doc.querySelectorAll('button, a, div');
+                todosLosBotones y Enlaces.forEach(elemento => {
+                    const texto = elemento.textContent.trim().toLowerCase();
+                    if (texto.includes('volver al panel') || texto.includes('volver al menú') || texto.includes('enviar solicitud al lhacys')) {
+                        elemento.remove();
+                    }
+                });
 
                 // --- A) Crear los estilos CSS para la botonera inferior (oculta al imprimir) ---
                 const estilos = doc.createElement('style');
@@ -335,7 +342,6 @@
                     .btn-cancelar:hover {
                         background-color: #c82333;
                     }
-                    /* Esencial: Oculta la botonera completa cuando se genere el PDF */
                     @media print {
                         .contenedor-botones-fijos {
                             display: none !important;
@@ -365,15 +371,11 @@
                 doc.body.appendChild(barraBotones);
 
                 // --- D) Asignar funciones lógicas a los botones inyectados ---
-                
-                // Acción de Cerrar Pestaña (Botón Rojo)
                 btnCancelar.onclick = function() {
                     nuevaVentana.close();
                 };
 
-                // Acción de Imprimir Localmente (Botón Verde)
                 btnEnviar.onclick = function() {
-                    // Lanzar directamente la impresión nativa de la nueva pestaña (ocultando los botones por CSS)
                     nuevaVentana.print();
                 };
             });
