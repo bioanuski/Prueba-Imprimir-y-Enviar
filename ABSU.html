@@ -233,17 +233,17 @@ tr:hover {
 
   <div class="container">
 
-    <p class="instruction">Modifique las cantidades de los ítems que necesite solicitar para su taller y pulse el botón "Imprimir PDF y Enviar Solicitud" situado en la barra superior del panel.</p>
+    <p class="instruction">Modifique las cantidades de los ítems que necesite solicitar para su taller y pulse el botón "Imprimir PDF y Guardar Taller" que aparecerá abajo.</p>
 
     <!-- Datos de la persona que pide -->
     <div class="solicitante-box">
       <div class="form-group">
         <label for="nombre">Nombre del Profesor / Solicitante:</label>
-        <input type="text" id="nombre" name="Profesor_Nombre" required placeholder="Ej: Dra. María García">
+        <input type="text" id="nombre" name="Profesor_Nombre" placeholder="Ej: Dra. María García">
       </div>
       <div class="form-group">
         <label for="email">Correo electrónico de contacto:</label>
-        <input type="email" id="email" name="Profesor_Email" required placeholder="Ej: maria.garcia@uam.es">
+        <input type="email" id="email" name="Profesor_Email" placeholder="Ej: maria.garcia@uam.es">
       </div>
     </div>
 
@@ -259,10 +259,8 @@ tr:hover {
           </tr>
         </thead>
         <tbody>
-          <!-- Vacío originalmente en el checklist, listo para filas extra -->
         </tbody>
       </table>
-      <!-- Botón dinámico estudiante -->
       <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-estudiante', 'Extra_Estudiante')">＋ Añadir fila de material extra</button>
     </div>
 
@@ -291,7 +289,6 @@ tr:hover {
           <tr><td>Mascarilla facial</td><td>2 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Mascarilla_Facial" class="input-cantidad" min="0" placeholder="0"></td></tr>
         </tbody>
       </table>
-      <!-- Botón dinámico compartido -->
       <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-compartido', 'Extra_Compartido')">＋ Añadir fila de material extra</button>
     </div>
 
@@ -305,10 +302,8 @@ tr:hover {
     </div>
 
   </div>
-
 </div>
 
-<!-- SCRIPT DE JAVASCRIPT -->
 <script>
   let contadores = {
     'tabla-estudiante': 1,
