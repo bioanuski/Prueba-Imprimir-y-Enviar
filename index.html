@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Talleres - LHACyS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0 0 40px 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Cabecera superior azul institucional idéntica a los talleres */
+        .header-banner {
+            background-color: #1a82e2;
+            color: white;
+            padding: 20px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-banner h1 {
+            margin: 0;
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 0 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .intro {
+            font-size: 1.05em;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Lista de talleres con tarjetas redondeadas y sombras */
+        ul.menu-talleres {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        ul.menu-talleres li {
+            margin-bottom: 0;
+            background: #ffffff;
+            padding: 20px 25px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        /* Efecto sutil al pasar el ratón sobre la tarjeta del taller */
+        ul.menu-talleres li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            background-color: #fcfdfe;
+        }
+
+        /* Estilo para los hipervínculos de los talleres */
+        ul.menu-talleres a {
+            color: #1a82e2;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.25em;
+            display: inline-block;
+            margin-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+
+        ul.menu-talleres a:hover {
+            border-color: #1a82e2;
+        }
+
+        ul.menu-talleres p {
+            margin: 5px 0 0 0;
+            color: #606266;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* --- NUEVA ESTRUCTURA PARA TALLERES CON SUBTALLERES (ANCHO COMPLETO) --- */
+        .taller-complejo-box {
+            background: #ffffff;
+            padding: 25px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
+
+        .taller-complejo-box h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 1.35em;
+            font-weight: bold;
+        }
+
+        .taller-complejo-box .desc {
+            margin: 0 0 25px 0;
+            color: #606266;
+            font-size: 0.95em;
+        }
+
+        /* Contenedor que alinea las 3 columnas de subtalleres en una fila */
+        .subtalleres-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Cada una de las 3 columnas individuales */
+        .subtaller-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Estilo para el botón interno superior */
+        .btn-subtaller {
+            background-color: #f0f4f8;
+            border: 2px solid #1a82e2;
+            border-radius: 6px;
+            padding: 12px 10px;
+            text-align: center;
+            color: #1a82e2;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.05em;
+            transition: background-color 0.2s, color 0.2s, transform 0.2s;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .btn-subtaller:hover {
+            background-color: #1a82e2;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Texto descriptivo de los contenidos debajo de los botones */
+        .subtaller-info {
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.4;
+            padding: 0 5px;
+        }
+
+        .subtaller-info ul {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+            color: #606266;
+        }
+
+        .subtaller-info li {
+            margin-bottom: 4px;
+        }
+
+        /* =========================================================================
+           NUEVOS ESTILOS PARA LA VENTANA MODAL (EL VISOR DEL TALLER SELECCIONADO)
+           ========================================================================= */
+        .modal-overlay {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 95%;
+            height: 90%;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Barra de herramientas superior del modal (Botones centralizados) */
+        .modal-actions-bar {
+            background-color: #f5f7fa;
+            border-bottom: 1px solid #dcdfe6;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-modal {
+            padding: 10px 18px;
+            font-size: 0.95em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .btn-print-send {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-print-send:hover {
+            background-color: #218838;
+        }
+
+        .btn-close-modal {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-close-modal:hover {
+            background-color: #c82333;
+        }
+
+        /* Contenedor del Taller mediante iframe */
+        .modal-body-iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Adaptación en pantallas de móvil */
+        @media (max-width: 768px) {
+            ul.menu-talleres {
+                grid-template-columns: 1fr;
+            }
+            .subtalleres-row {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .modal-content {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-banner">
+        <h1>Formularios de Solicitud de Material de los Talleres LHACyS</h1>
+    </div>
+
+    <div class="container">
+        <p class="intro">Sistema de solicitud de material fungible e inventariable de los talleres del LHACyS. Selecciona uno de los siguientes talleres y cumplimenta el formulario con los materiales necesarios para el taller:</p>
+
+        <ul class="menu-talleres">
+            <li>
+                <!-- Se cambia el href directo por la función JavaScript 'abrirTaller' -->
+                <a onclick="abrirTaller('ABSU.html')">ABSU</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('IPQ_Anestesia.html')">IPQ: Anestesia</a>
+                <p>En este taller se desarrollan 4 estaciones: RCP, DESA, Punción epidural y canalización vía venosa.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('IPQ_Suturas.html')">IPQ: Suturas</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('Obstetricia y Ginecología.html')">Obstetricia y Ginecología</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Administración de fármacos.html')">PT I: Administración de fármacos</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Aseo, movilización y vendajes.html')">PT I: Aseo, movilización y vendajes</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Extracciones.html')">PT I: Extracciones</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Sondaje Nasogástrico.html')">PT I: Sondaje Nasogástrico</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Sondaje vesical.html')">PT I: Sondaje vesical</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+        </ul>
+
+        <div class="taller-complejo-box">
+            <h3>Introducción a la práctica clínica</h3>
+            <p class="desc">Selecciona uno de los siguientes bloques temáticos o subtalleres para acceder a su listado de verificación correspondiente:</p>
+            
+            <div class="subtalleres-row">
+                
+                <div class="subtaller-col">
+                    <a onclick="abrirTaller('subtaller_1.html')" class="btn-subtaller">Seminario 3</a>
+                    <div class="subtaller-info">
+                        Descripción breve del primer bloque. Contenidos principales:
+                        <ul>
+                            <li>Vía venosa periférica</li>
+                            <li>Sondaje vesical</li>
+                            <li>Piel y anejos_dermatoscopio, Tórax y Pulmones, Mamas y axilas y Esfingomanómetro automático y pulsioxímetro</li>
+                            <li>Cardiovascular (corazón), Vascular periférico y Esfingomanómetro manual y Doppler</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subtaller-col">
+                    <a onclick="abrirTaller('subtaller_2.html')" class="btn-subtaller">Seminario 4</a>
+                    <div class="subtaller-info">
+                        Descripción breve del segundo bloque. Contenidos principales:
+                        <ul>
+                            <li>Abdomen y tacto rectal</li>
+                            <li>Aparato locomotor superior</li>
+                            <li>Aparato locomotor inferior</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subtaller-col">
+                    <a onclick="abrirTaller('subtaller_3.html')" class="btn-subtaller">Seminario 5</a>
+                    <div class="subtaller-info">
+                        Examen neurológico:
+                        <ul>
+                            <li>Comportamiento, estado mental y cerebelo</li>
+                            <li>Pares craneales, cabeza y cuello</li>
+                            <li>Motor, sensibilidad y reflejos</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- =========================================================================
+       ESTRUCTURA HTML DE LA VENTANA MODAL FLOTANTE
+       ========================================================================= */ -->
+    <div id="tallerModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-actions-bar">
+                <!-- Botón único centralizado para Imprimir y Enviar -->
+                <button type="button" class="btn-modal btn-print-send" onclick="procesarImpresionYEnvio()">Imprimir PDF y Enviar Solicitud</button>
+                <button type="button" class="btn-modal btn-close-modal" onclick="cerrarTaller()">Cerrar</button>
+            </div>
+            <!-- Aquí dentro se cargará dinámicamente el taller seleccionado -->
+            <iframe id="tallerFrame" class="modal-body-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+       SCRIPT DE CONTROL DE CARGA, IMPRESIÓN Y ENVÍO CENTRALIZADO
+       ========================================================================= */ -->
+    <script>
+        // Abre la ventana modal cargando el archivo del taller correspondiente
+        function abrirTaller(urlArchivo) {
+            const modal = document.getElementById('tallerModal');
+            const iframe = document.getElementById('tallerFrame');
+            
+            iframe.src = urlArchivo;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Evita scroll en el fondo
+        }
+
+        // Cierra la ventana modal limpiando el iframe
+        function cerrarTaller() {
+            const modal = document.getElementById('tallerModal');
+            const iframe = document.getElementById('tallerFrame');
+            
+            iframe.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura el scroll
+        }
+
+        // FUNCIÓN CENTRAL: Imprime el formulario del iframe y lo envía a Formspree
+        function procesarImpresionYEnvio() {
+            const iframe = document.getElementById('tallerFrame');
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            const form = iframeDocument.querySelector('form'); // Localiza el formulario dentro del taller
+
+            if (!form) {
+                alert('No se detectó un formulario válido en este taller.');
+                return;
+            }
+
+            // 1. Lanzar orden de impresión enfocada exclusivamente en el iframe del taller
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+
+            // 2. Extraer y enviar los datos recopilados por Fetch a la URL de Formspree del formulario
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('¡Solicitud enviada correctamente a Formspree y lista para guardar en PDF!');
+                    form.reset(); // Resetea el taller por si quieren hacer otra solicitud
+                    cerrarTaller();
+                } else {
+                    alert('Error: El formulario se imprimió pero no pudo ser procesado por Formspree.');
+                }
+            })
+            .catch(error => {
+                console.error('Error en el envío:', error);
+                alert('Error de red: La solicitud no se pudo enviar a Formspree.');
+            });
+        }
+    </script>
+
+</body>
+</html>
