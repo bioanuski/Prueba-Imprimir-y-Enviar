@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHACyS - Solicitud de Material: Sondaje vesical</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0 0 40px 0;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+/* Cabecera superior azul institucional */
+.header-banner {
+  background-color: #1a82e2;
+  color: white;
+  padding: 20px 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-banner h1 {
+  margin: 0;
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.container {
+  padding: 0 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: #2c3e50;
+  margin-top: 0;
+  font-size: 1.3em;
+  border-bottom: 2px solid #1a82e2;
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+p.instruction {
+  font-size: 1.05em;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* Bloque de datos del solicitante */
+.solicitante-box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #dcdfe6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"] {
+  padding: 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+/* Tablas estilizadas */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 15px;
+  background: white;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ebeef5;
+}
+
+th {
+  background-color: #eef5fc;
+  color: #1a82e2;
+  font-weight: bold;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Anchos de columna */
+.col-cant-base { width: 25%; }
+.col-solicitada { width: 20%; text-align: center; }
+
+/* Control de los cuadros editables */
+.input-cantidad {
+  width: 70px;
+  padding: 8px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1em;
+}
+
+/* NUEVO: Recuadro azul suave para nuevos materiales manuales */
+.input-extra-nombre {
+  width: 90%;
+  padding: 8px;
+  border: 1px solid #b6d4f9;
+  border-radius: 4px;
+  font-size: 0.95em;
+  background-color: #eef7ff; /* Tono azulado suave solicitado */
+  color: #1a82e2;
+  font-weight: bold;
+}
+
+.input-extra-nombre::placeholder {
+  color: #70a6df;
+  font-weight: normal;
+}
+
+/* Botón para añadir filas de forma dinámica */
+.btn-add-row {
+  background-color: transparent;
+  color: #1a82e2;
+  border: 2px dashed #1a82e2;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 40px;
+  display: inline-block;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-add-row:hover {
+  background-color: #eef5fc;
+}
+
+/* Cuadro de observaciones/comentarios */
+.comentarios-box {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  border: 1px solid #dcdfe6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+}
+
+.comentarios-box textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 1em;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+tr:hover {
+  background-color: #f8fafc;
+}
+
+.actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Botones inferiores */
+.btn-enviar {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 14px 35px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1em;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-enviar:hover {
+  background-color: #27ae60;
+  transform: translateY(-1px);
+}
+
+.btn-volver {
+  display: inline-block;
+  background-color: #1a82e2;
+  color: white;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(26, 130, 226, 0.2);
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-volver:hover {
+  background-color: #1466b3;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .solicitante-box {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Reemplaza TU_CODIGO_AQUI por tu ID de Formspree -->
+<form action="https://formspree.io/f/TU_CODIGO_AQUI" method="POST">
+
+  <div class="header-banner">
+    <h1>LHACyS - Solicitud de Material: Sondaje vesical</h1>
+  </div>
+
+  <div class="container">
+
+    <p class="instruction">Modifique las cantidades de los ítems que necesite solicitar para su taller y pulse el botón "Enviar Solicitud" al final de la página.</p>
+
+    <!-- Datos de la persona que pide -->
+    <div class="solicitante-box">
+      <div class="form-group">
+        <label for="nombre">Nombre del Profesor / Solicitante:</label>
+        <input type="text" id="nombre" name="Profesor_Nombre" required placeholder="Ej: Dra. María García">
+      </div>
+      <div class="form-group">
+        <label for="email">Correo electrónico de contacto:</label>
+        <input type="email" id="email" name="Profesor_Email" required placeholder="Ej: maria.garcia@uam.es">
+      </div>
+    </div>
+
+    <input type="hidden" name="_subject" value="Nueva Solicitud de Material: Sondaje Vesical">
+
+    <!-- SECCIÓN 1: MATERIAL POR ESTUDIANTE -->
+    <div class="section">
+      <h2>Material por estudiante</h2>
+      <table id="tabla-estudiante">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th class="col-cant-base">Unidades de Referencia</th>
+            <th class="col-solicitada">Cantidad Solicitada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Guantes no estériles</td><td>2 por estudiante</td><td class="col-solicitada"><input type="number" name="Cant_Guantes_No_Esteriles" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Paño estéril fenestrado</td><td>1 por estudiante</td><td class="col-solicitada"><input type="number" name="Cant_Pano_Esteril_Fenestrado" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Paño estéril no fenestrado</td><td>1 por estudiante</td><td class="col-solicitada"><input type="number" name="Cant_Pano_Esteril_No_Fenestrado" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Gasas</td><td>2 por estudiante</td><td class="col-solicitada"><input type="number" name="Cant_Gasas" class="input-cantidad" min="0" placeholder="0"></td></tr>
+        </tbody>
+      </table>
+      <!-- Botón dinámico estudiante -->
+      <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-estudiante', 'Extra_Estudiante')">＋ Añadir fila de material extra</button>
+    </div>
+
+    <!-- SECCIÓN 2: MATERIAL COMPARTIDO -->
+    <div class="section">
+      <h2>Material compartido</h2>
+      <table id="tabla-compartido">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th class="col-cant-base">Unidades de Referencia</th>
+            <th class="col-solicitada">Cantidad Solicitada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Maniquí sondaje MASCULINO</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Maniqui_Masculino" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Maniquí sondaje FEMENINO</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Maniqui_Femenino" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Palo gotero</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Palo_Gotero" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Lubricante</td><td>1 bote por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Lubricante_Bote" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Jeringa 10 ml</td><td>1 cada 2 estudiantes</td><td class="col-solicitada"><input type="number" name="Cant_Jeringa_10ml" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Sonda rectal</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Sonda_Rectal" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Sonda vesical de 3 vías</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Sonda_Vesical_3vias" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Sonda vesical pico-pato</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Sonda_Pico_Pato" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Sonda Foley 14Fr</td><td>4 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Sonda_Foley_14Fr" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Colector urinario</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Colector_Urinario" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Bolsa colectora</td><td>2 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Bolsa_Colectora" class="input-cantidad" min="0" placeholder="0"></td></tr>
+          <tr><td>Pinzas Kocher</td><td>2 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Pinzas_Kocher" class="input-cantidad" min="0" placeholder="0"></td></tr>
+        </tbody>
+      </table>
+      <!-- Botón dinámico compartido -->
+      <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-compartido', 'Extra_Compartido')">＋ Añadir fila de material extra</button>
+    </div>
+
+    <!-- SECCIÓN 3: COMENTARIOS Y OBSERVACIONES -->
+    <div class="section">
+      <h2>Comentarios y Organización del Taller</h2>
+      <div class="comentarios-box">
+        <label style="color: #555; font-size: 0.95em;" for="comentarios">Indique aquí cualquier especificación adicional sobre la distribución de las mesas, necesidades del aula o variaciones en los materiales:</label>
+        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Necesitamos dos mesas adicionales para las estaciones de maniquíes masculinos..."></textarea>
+      </div>
+    </div>
+
+    <!-- Fila inferior de acciones -->
+    <div class="actions-row">
+      <a href="index.html" class="btn-volver">← Volver al Panel Principal</a>
+      <button type="submit" class="btn-enviar">Enviar Solicitud al LHACyS</button>
+    </div>
+
+  </div>
+
+</form>
+
+<!-- SCRIPT DE JAVASCRIPT PARA CREAR FILAS INFINITAS -->
+<script>
+  // Contadores independientes para asignar un nombre único a cada input que se cree
+  let contadores = {
+    'tabla-estudiante': 1,
+    'tabla-compartido': 1
+  };
+
+  function agregarFilaExtra(idTabla, prefijoName) {
+    const tbody = document.getElementById(idTabla).getElementsByTagName('tbody')[0];
+    const num = contadores[idTabla];
+    
+    // Crear el elemento de fila (tr)
+    const nuevaFila = document.createElement('tr');
+    
+    // Configurar las tres celdas interiores
+    nuevaFila.innerHTML = `
+      <td>
+        <input type="text" name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" placeholder="Nombre del material añadido...">
+      </td>
+      <td>Manual</td>
+      <td class="col-solicitada">
+        <input type="number" name="${prefijoName}_Cant_${num}" class="input-cantidad" min="0" placeholder="0">
+      </td>
+    `;
+    
+    // Inyectar la fila al final del cuerpo de la tabla
+    tbody.appendChild(nuevaFila);
+    
+    // Incrementar el contador para el próximo clic
+    contadores[idTabla]++;
+  }
+</script>
+
+</body>
+</html>
