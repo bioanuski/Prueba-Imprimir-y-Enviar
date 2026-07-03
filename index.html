@@ -1,340 +1,384 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LHACyS - Solicitud de Material: ABSU</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Talleres - LHACyS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0 0 40px 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0 0 40px 0;
-  background-color: #f5f7fa;
-  color: #333;
-}
+        /* Cabecera superior azul institucional idéntica a los talleres */
+        .header-banner {
+            background-color: #1a82e2;
+            color: white;
+            padding: 20px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-/* Cabecera superior azul institucional */
-.header-banner {
-  background-color: #1a82e2;
-  color: white;
-  padding: 20px 40px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+        .header-banner h1 {
+            margin: 0;
+            font-size: 1.6em;
+            font-weight: bold;
+        }
 
-.header-banner h1 {
-  margin: 0;
-  font-size: 1.6em;
-  font-weight: bold;
-}
+        .container {
+            padding: 0 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-.container {
-  padding: 0 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+        .intro {
+            font-size: 1.05em;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
 
-h2 {
-  color: #2c3e50;
-  margin-top: 0;
-  font-size: 1.3em;
-  border-bottom: 2px solid #1a82e2;
-  padding-bottom: 5px;
-  display: inline-block;
-}
+        /* Lista de talleres con tarjetas redondeadas y sombras */
+        ul.menu-talleres {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
 
-p.instruction {
-  font-size: 1.05em;
-  color: #555;
-  margin-bottom: 25px;
-}
+        ul.menu-talleres li {
+            margin-bottom: 0;
+            background: #ffffff;
+            padding: 20px 25px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-/* Bloque de datos del solicitante */
-.solicitante-box {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #dcdfe6;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-bottom: 30px;
-  display: flex;
-  gap: 20px;
-}
+        /* Efecto sutil al pasar el ratón sobre la tarjeta del taller */
+        ul.menu-talleres li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            background-color: #fcfdfe;
+        }
 
-.form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+        /* Estilo para los hipervínculos de los talleres */
+        ul.menu-talleres a {
+            color: #1a82e2;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.25em;
+            display: inline-block;
+            margin-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
 
-.form-group label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #2c3e50;
-}
+        ul.menu-talleres a:hover {
+            border-color: #1a82e2;
+        }
 
-.form-group input[type="text"],
-.form-group input[type="email"] {
-  padding: 10px;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
-  font-size: 1em;
-}
+        ul.menu-talleres p {
+            margin: 5px 0 0 0;
+            color: #606266;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
 
-/* Tablas estilizadas */
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-bottom: 15px;
-  background: white;
-  border: 1px solid #dcdfe6;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+        /* --- NUEVA ESTRUCTURA PARA TALLERES CON SUBTALLERES (ANCHO COMPLETO) --- */
+        .taller-complejo-box {
+            background: #ffffff;
+            padding: 25px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
 
-th, td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ebeef5;
-}
+        .taller-complejo-box h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 1.35em;
+            font-weight: bold;
+        }
 
-th {
-  background-color: #eef5fc;
-  color: #1a82e2;
-  font-weight: bold;
-}
+        .taller-complejo-box .desc {
+            margin: 0 0 25px 0;
+            color: #606266;
+            font-size: 0.95em;
+        }
 
-tr:last-child td {
-  border-bottom: none;
-}
+        /* Contenedor que alinea las 3 columnas de subtalleres en una fila */
+        .subtalleres-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-/* Anchos de columna */
-.col-cant-base { width: 25%; }
-.col-solicitada { width: 20%; text-align: center; }
+        /* Cada una de las 3 columnas individuales */
+        .subtaller-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
 
-/* Control de los cuadros editables */
-.input-cantidad {
-  width: 70px;
-  padding: 8px;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
-  text-align: center;
-  font-size: 1em;
-}
+        /* Estilo para el botón interno superior */
+        .btn-subtaller {
+            background-color: #f0f4f8;
+            border: 2px solid #1a82e2;
+            border-radius: 6px;
+            padding: 12px 10px;
+            text-align: center;
+            color: #1a82e2;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.05em;
+            transition: background-color 0.2s, color 0.2s, transform 0.2s;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
 
-/* Recuadro azul suave para nuevos materiales manuales */
-.input-extra-nombre {
-  width: 90%;
-  padding: 8px;
-  border: 1px solid #b6d4f9;
-  border-radius: 4px;
-  font-size: 0.95em;
-  background-color: #eef7ff;
-  color: #1a82e2;
-  font-weight: bold;
-}
+        .btn-subtaller:hover {
+            background-color: #1a82e2;
+            color: white;
+            transform: translateY(-2px);
+        }
 
-.input-extra-nombre::placeholder {
-  color: #70a6df;
-  font-weight: normal;
-}
+        /* Texto descriptivo de los contenidos debajo de los botones */
+        .subtaller-info {
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.4;
+            padding: 0 5px;
+        }
 
-/* Botón para añadir filas de forma dinámica */
-.btn-add-row {
-  background-color: transparent;
-  color: #1a82e2;
-  border: 2px dashed #1a82e2;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 40px;
-  display: inline-block;
-  transition: background-color 0.2s, color 0.2s;
-}
+        .subtaller-info ul {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+            color: #606266;
+        }
 
-.btn-add-row:hover {
-  background-color: #eef5fc;
-}
+        .subtaller-info li {
+            margin-bottom: 4px;
+        }
 
-/* Cuadro de observaciones/comentarios */
-.comentarios-box {
-  background: white;
-  padding: 25px;
-  border-radius: 8px;
-  border: 1px solid #dcdfe6;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-bottom: 40px;
-}
-
-.comentarios-box textarea {
-  width: 100%;
-  height: 120px;
-  padding: 12px;
-  border: 1px solid #dcdfe6;
-  border-radius: 6px;
-  font-family: Arial, sans-serif;
-  font-size: 1em;
-  resize: vertical;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-tr:hover {
-  background-color: #f8fafc;
-}
-
-@media (max-width: 768px) {
-  .solicitante-box {
-    flex-direction: column;
-  }
-}
-
-/* ==========================================================================
-   ESTILOS ESPECÍFICOS DE IMPRESIÓN (CONFIGURACIÓN OPTIMIZADA PARA EL PDF)
-   ========================================================================== */
-@media print {
-  body {
-    background-color: #ffffff !important;
-  }
-  
-  .header-banner {
-    box-shadow: none !important;
-    background-color: #1a82e2 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* Ocultar elementos interactivos que no deben ir en el PDF físico */
-  .btn-add-row {
-    display: none !important;
-  }
-
-  /* Evitar que el cuadro de texto se corte y expandir todo lo escrito */
-  .comentarios-box textarea {
-    border: 1px solid #ccc !important;
-    height: auto !important;
-    resize: none !important;
-  }
-}
-</style>
+        /* Adaptación en pantallas de móvil */
+        @media (max-width: 768px) {
+            ul.menu-talleres {
+                grid-template-columns: 1fr;
+            }
+            .subtalleres-row {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="main-wrapper">
-
-  <div class="header-banner">
-    <h1>LHACyS - Solicitud de Material: ABSU</h1>
-  </div>
-
-  <div class="container">
-
-    <p class="instruction">Modifique las cantidades de los ítems que necesite solicitar para su taller y pulse el botón "Imprimir PDF y Enviar Solicitud" situado en la barra superior del panel.</p>
-
-    <!-- Datos de la persona que pide -->
-    <div class="solicitante-box">
-      <div class="form-group">
-        <label for="nombre">Nombre del Profesor / Solicitante:</label>
-        <input type="text" id="nombre" name="Profesor_Nombre" required placeholder="Ej: Dra. María García">
-      </div>
-      <div class="form-group">
-        <label for="email">Correo electrónico de contacto:</label>
-        <input type="email" id="email" name="Profesor_Email" required placeholder="Ej: maria.garcia@uam.es">
-      </div>
+    <div class="header-banner">
+        <h1>Formularios de Solicitud de Material de los Talleres LHACyS</h1>
     </div>
 
-    <!-- SECCIÓN 1: MATERIAL POR ESTUDIANTE -->
-    <div class="section">
-      <h2>Material por estudiante</h2>
-      <table id="tabla-estudiante">
-        <thead>
-          <tr>
-            <th>Material</th>
-            <th class="col-cant-base">Unidades de Referencia</th>
-            <th class="col-solicitada">Cantidad Solicitada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Vacío originalmente en el checklist, listo para filas extra -->
-        </tbody>
-      </table>
-      <!-- Botón dinámico estudiante -->
-      <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-estudiante', 'Extra_Estudiante')">＋ Añadir fila de material extra</button>
+    <div class="container">
+        <p class="intro">Sistema de solicitud de material fungible e inventariable de los talleres del LHACyS. Selecciona uno de los siguientes talleres y cumplimenta el formulario con los materiales necesarios para el taller:</p>
+
+        <ul class="menu-talleres">
+            <li>
+                <a onclick="abrirTaller('ABSU.html')">ABSU</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('IPQ_Anestesia.html')">IPQ: Anestesia</a>
+                <p>En este taller se desarrollan 4 estaciones: RCP, DESA, Punción epidural y canalización vía venosa.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('IPQ_Suturas.html')">IPQ: Suturas</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('Obstetricia y Ginecología.html')">Obstetricia y Ginecología</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Administración de fármacos.html')">PT I: Administración de fármacos</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Aseo, movilización y vendajes.html')">PT I: Aseo, movilización y vendajes</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Extracciones.html')">PT I: Extracciones</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Sondaje Nasogástrico.html')">PT I: Sondaje Nasogástrico</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+            <li>
+                <a onclick="abrirTaller('PT I_Sondaje vesical.html')">PT I: Sondaje vesical</a>
+                <p>Descripción breve o introducción de lo que se trata este taller.</p>
+            </li>
+        </ul>
+
+        <div class="taller-complejo-box">
+            <h3>Introducción a la práctica clínica</h3>
+            <p class="desc">Selecciona uno de los siguientes bloques temáticos o subtalleres para acceder a su listado de verificación correspondiente:</p>
+            
+            <div class="subtalleres-row">
+                
+                <div class="subtaller-col">
+                    <a onclick="abrirTaller('subtaller_1.html')" class="btn-subtaller">Seminario 3</a>
+                    <div class="subtaller-info">
+                        Descripción breve del primer bloque. Contenidos principales:
+                        <ul>
+                            <li>Vía venosa periférica</li>
+                            <li>Sondaje vesical</li>
+                            <li>Piel y anejos_dermatoscopio, Tórax y Pulmones, Mamas y axilas y Esfingomanómetro automático y pulsioxímetro</li>
+                            <li>Cardiovascular (corazón), Vascular periférico y Esfingomanómetro manual y Doppler</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subtaller-col">
+                    <a onclick="abrirTaller('subtaller_2.html')" class="btn-subtaller">Seminario 4</a>
+                    <div class="subtaller-info">
+                        Descripción breve del segundo bloque. Contenidos principales:
+                        <ul>
+                            <li>Abdomen y tacto rectal</li>
+                            <li>Aparato locomotor superior</li>
+                            <li>Aparato locomotor inferior</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subtaller-col">
+                    <a onclick="abrirTaller('subtaller_3.html')" class="btn-subtaller">Seminario 5</a>
+                    <div class="subtaller-info">
+                        Examen neurológico:
+                        <ul>
+                            <li>Comportamiento, estado mental y cerebelo</li>
+                            <li>Pares craneales, cabeza y cuello</li>
+                            <li>Motor, sensibilidad y reflejos</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <!-- SECCIÓN 2: MATERIAL COMPARTIDO -->
-    <div class="section">
-      <h2>Material compartido</h2>
-      <table id="tabla-compartido">
-        <thead>
-          <tr>
-            <th>Material</th>
-            <th class="col-cant-base">Unidades de Referencia</th>
-            <th class="col-solicitada">Cantidad Solicitada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>DESA</td><td>2 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_DESA" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Maniquí de intubación/ventilación</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Maniqui_Intubacion" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Maniquí RCP</td><td>3</td><td class="col-solicitada"><input type="number" name="Cant_Maniqui_RCP" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Ambú</td><td>2 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Ambu" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Laringoscopio</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Laringoscopio" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Laringoscopio óptico Airtraq</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Laringoscopio_Airtraq" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Máscara laríngea adulto</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Mascara_Laringea" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Cánulas de Guedel</td><td>3 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Canulas_Guedel" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Tubo orotraqueal</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Tubo_Orotraqueal" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Tubo flexometálico</td><td>1 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Tubo_Flexometalico" class="input-cantidad" min="0" placeholder="0"></td></tr>
-          <tr><td>Mascarilla facial</td><td>2 por grupo</td><td class="col-solicitada"><input type="number" name="Cant_Mascarilla_Facial" class="input-cantidad" min="0" placeholder="0"></td></tr>
-        </tbody>
-      </table>
-      <!-- Botón dinámico compartido -->
-      <button type="button" class="btn-add-row" onclick="agregarFilaExtra('tabla-compartido', 'Extra_Compartido')">＋ Añadir fila de material extra</button>
-    </div>
+    <!-- =========================================================================
+       SCRIPT OPTIMIZADO: INYECTA LOS BOTONES LOCALES EN LA NUEVA PESTAÑA
+       ========================================================================= -->
+    <script>
+        function abrirTaller(urlArchivo) {
+            // 1. Abrimos la pestaña nueva en blanco primero para tener el control del objeto 'window'
+            const nuevaVentana = window.open(urlArchivo, '_blank');
 
-    <!-- SECCIÓN 3: COMENTARIOS Y OBSERVACIONES -->
-    <div class="section">
-      <h2>Comentarios y Organización del Taller</h2>
-      <div class="comentarios-box">
-        <label style="color: #555; font-size: 0.95em;" for="comentarios">Indique aquí cualquier especificación adicional sobre la distribución de las mesas, necesidades del aula o variaciones en los materiales:</label>
-        <textarea id="comentarios" name="Observaciones_Organizacion" placeholder="Ej: Necesitamos espacio amplio para tumbar las colchonetas de RCP..."></textarea>
-      </div>
-    </div>
+            if (!nuevaVentana) {
+                alert("Por favor, permite los pop-ups para abrir los talleres.");
+                return;
+            }
 
-  </div>
+            // 2. Esperamos a que la pestaña termine de cargar el HTML del taller para inyectarle las acciones
+            nuevaVentana.addEventListener('load', function() {
+                const doc = nuevaVentana.document;
 
-</div>
+                // --- A) Crear los estilos CSS para la botonera inferior (oculta al imprimir) ---
+                const estilos = doc.createElement('style');
+                estilos.textContent = `
+                    .contenedor-botones-fijos {
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                        margin-top: 40px;
+                        padding: 20px;
+                        background-color: #f5f7fa;
+                        border-top: 1px solid #dcdfe6;
+                    }
+                    .btn-accion {
+                        padding: 12px 24px;
+                        font-size: 1em;
+                        font-weight: bold;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        border: none;
+                        transition: background 0.2s, transform 0.1s;
+                    }
+                    .btn-accion:active {
+                        transform: scale(0.98);
+                    }
+                    .btn-enviar-print {
+                        background-color: #28a745;
+                        color: white;
+                    }
+                    .btn-enviar-print:hover {
+                        background-color: #218838;
+                    }
+                    .btn-cancelar {
+                        background-color: #dc3545;
+                        color: white;
+                    }
+                    .btn-cancelar:hover {
+                        background-color: #c82333;
+                    }
+                    /* Esencial: Oculta la botonera completa cuando se genere el PDF */
+                    @media print {
+                        .contenedor-botones-fijos {
+                            display: none !important;
+                        }
+                    }
+                `;
+                doc.head.appendChild(estilos);
 
-<!-- SCRIPT DE JAVASCRIPT -->
-<script>
-  let contadores = {
-    'tabla-estudiante': 1,
-    'tabla-compartido': 1
-  };
+                // --- B) Construir la barra de botones HTML ---
+                const barraBotones = doc.createElement('div');
+                barraBotones.className = 'contenedor-botones-fijos';
 
-  function agregarFilaExtra(idTabla, prefijoName) {
-    const tbody = document.getElementById(idTabla).getElementsByTagName('tbody')[0];
-    const num = contadores[idTabla];
-    
-    const nuevaFila = document.createElement('tr');
-    
-    nuevaFila.innerHTML = `
-      <td>
-        <input type="text" name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" placeholder="Nombre del material añadido...">
-      </td>
-      <td>Manual</td>
-      <td class="col-solicitada">
-        <input type="number" name="${prefijoName}_Cant_${num}" class="input-cantidad" min="0" placeholder="0">
-      </td>
-    `;
-    
-    tbody.appendChild(nuevaFila);
-    contadores[idTabla]++;
-  }
-</script>
+                const btnEnviar = doc.createElement('button');
+                btnEnviar.type = 'button';
+                btnEnviar.className = 'btn-accion btn-enviar-print';
+                btnEnviar.textContent = 'Imprimir PDF y Guardar Taller';
+
+                const btnCancelar = doc.createElement('button');
+                btnCancelar.type = 'button';
+                btnCancelar.className = 'btn-accion btn-cancelar';
+                btnCancelar.textContent = 'Cerrar Pestaña';
+
+                barraBotones.appendChild(btnEnviar);
+                barraBotones.appendChild(btnCancelar);
+
+                // --- C) Insertar la botonera al final del BODY del taller ---
+                doc.body.appendChild(barraBotones);
+
+                // --- D) Asignar funciones lógicas a los botones inyectados ---
+                
+                // Acción de Cerrar Pestaña (Botón Rojo)
+                btnCancelar.onclick = function() {
+                    nuevaVentana.close();
+                };
+
+                // Acción de Imprimir Localmente (Botón Verde)
+                btnEnviar.onclick = function() {
+                    // Lanzar directamente la impresión nativa de la nueva pestaña (ocultando los botones por CSS)
+                    nuevaVentana.print();
+                };
+            });
+        }
+    </script>
 
 </body>
 </html>
