@@ -187,52 +187,37 @@ tr:hover {
   background-color: #f8fafc;
 }
 
-.actions-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
-/* Botones inferiores */
-.btn-enviar {
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  padding: 14px 35px;
-  border-radius: 25px;
-  font-weight: bold;
-  font-size: 1.1em;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.btn-enviar:hover {
-  background-color: #27ae60;
-  transform: translateY(-1px);
-}
-
-.btn-volver {
-  display: inline-block;
-  background-color: #1a82e2;
-  color: white;
-  text-decoration: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-weight: bold;
-  box-shadow: 0 4px 6px rgba(26, 130, 226, 0.2);
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.btn-volver:hover {
-  background-color: #1466b3;
-  transform: translateY(-1px);
-}
-
 @media (max-width: 768px) {
   .solicitante-box {
     flex-direction: column;
+  }
+}
+
+/* ==========================================================================
+   ESTILOS ESPECÍFICOS DE IMPRESIÓN (CONFIGURACIÓN OPTIMIZADA PARA EL PDF)
+   ========================================================================== */
+@media print {
+  body {
+    background-color: #ffffff !important;
+  }
+  
+  .header-banner {
+    box-shadow: none !important;
+    background-color: #1a82e2 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ocultar elementos interactivos que no deben ir en el PDF físico */
+  .btn-add-row {
+    display: none !important;
+  }
+
+  /* Evitar que el cuadro de texto se corte y expandir todo lo escrito */
+  .comentarios-box textarea {
+    border: 1px solid #ccc !important;
+    height: auto !important;
+    resize: none !important;
   }
 }
 </style>
@@ -240,7 +225,7 @@ tr:hover {
 
 <body>
 
-<!-- Reemplaza TU_CODIGO_AQUI por tu ID de Formspree -->
+<!-- Vinculación directa con Formspree. Cambia TU_CODIGO_AQUI por tu token real -->
 <form action="https://formspree.io/f/TU_CODIGO_AQUI" method="POST">
 
   <div class="header-banner">
@@ -249,7 +234,7 @@ tr:hover {
 
   <div class="container">
 
-    <p class="instruction">Modifique las cantidades de los ítems que necesite solicitar para su taller y pulse el botón "Enviar Solicitud" al final de la página.</p>
+    <p class="instruction">Modifique las cantidades de los ítems que necesite solicitar para su taller y pulse el botón "Imprimir PDF y Enviar Solicitud" situado en la barra superior del panel.</p>
 
     <!-- Datos de la persona que pide -->
     <div class="solicitante-box">
@@ -262,8 +247,6 @@ tr:hover {
         <input type="email" id="email" name="Profesor_Email" required placeholder="Ej: maria.garcia@uam.es">
       </div>
     </div>
-
-    <input type="hidden" name="_subject" value="Nueva Solicitud de Material: ABSU">
 
     <!-- SECCIÓN 1: MATERIAL POR ESTUDIANTE -->
     <div class="section">
@@ -322,19 +305,12 @@ tr:hover {
       </div>
     </div>
 
-    <!-- Fila inferior de acciones -->
-    <div class="actions-row">
-      <a href="index.html" class="btn-volver">← Volver al Panel Principal</a>
-      <button type="submit" class="btn-enviar">Enviar Solicitud al LHACyS</button>
-    </div>
-
   </div>
 
 </form>
 
-<!-- SCRIPT DE JAVASCRIPT PARA CREAR FILAS INFINITAS -->
+<!-- SCRIPT DE JAVASCRIPT -->
 <script>
-  // Contadores independientes para asignar un nombre único a cada input que se cree
   let contadores = {
     'tabla-estudiante': 1,
     'tabla-compartido': 1
@@ -344,10 +320,8 @@ tr:hover {
     const tbody = document.getElementById(idTabla).getElementsByTagName('tbody')[0];
     const num = contadores[idTabla];
     
-    // Crear el elemento de fila (tr)
     const nuevaFila = document.createElement('tr');
     
-    // Configurar las tres celdas interiores
     nuevaFila.innerHTML = `
       <td>
         <input type="text" name="${prefijoName}_Nombre_${num}" class="input-extra-nombre" placeholder="Nombre del material añadido...">
@@ -358,10 +332,7 @@ tr:hover {
       </td>
     `;
     
-    // Inyectar la fila al final del cuerpo de la tabla
     tbody.appendChild(nuevaFila);
-    
-    // Incrementar el contador para el próximo clic
     contadores[idTabla]++;
   }
 </script>
