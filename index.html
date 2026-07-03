@@ -172,77 +172,6 @@
             margin-bottom: 4px;
         }
 
-        /* =========================================================================
-           NUEVOS ESTILOS PARA LA VENTANA MODAL (EL VISOR DEL TALLER SELECCIONADO)
-           ========================================================================= */
-        .modal-overlay {
-            display: none; /* Oculto por defecto */
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: #fff;
-            width: 95%;
-            height: 90%;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-        }
-
-        /* Barra de herramientas superior del modal (Botones centralizados) */
-        .modal-actions-bar {
-            background-color: #f5f7fa;
-            border-bottom: 1px solid #dcdfe6;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .btn-modal {
-            padding: 10px 18px;
-            font-size: 0.95em;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s;
-        }
-
-        .btn-print-send {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-print-send:hover {
-            background-color: #218838;
-        }
-
-        .btn-close-modal {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-close-modal:hover {
-            background-color: #c82333;
-        }
-
-        /* Contenedor del Taller mediante iframe */
-        .modal-body-iframe {
-            flex: 1;
-            border: none;
-            width: 100%;
-            height: 100%;
-        }
-
         /* Adaptación en pantallas de móvil */
         @media (max-width: 768px) {
             ul.menu-talleres {
@@ -251,11 +180,6 @@
             .subtalleres-row {
                 flex-direction: column;
                 gap: 30px;
-            }
-            .modal-content {
-                width: 100%;
-                height: 100%;
-                border-radius: 0;
             }
         }
     </style>
@@ -271,7 +195,6 @@
 
         <ul class="menu-talleres">
             <li>
-                <!-- Se cambia el href directo por la función JavaScript 'abrirTaller' -->
                 <a onclick="abrirTaller('ABSU.html')">ABSU</a>
                 <p>Descripción breve o introducción de lo que se trata este taller.</p>
             </li>
@@ -358,81 +281,131 @@
     </div>
 
     <!-- =========================================================================
-       ESTRUCTURA HTML DE LA VENTANA MODAL FLOTANTE
-       ========================================================================= */ -->
-    <div id="tallerModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-actions-bar">
-                <!-- Botón único centralizado para Imprimir y Enviar -->
-                <button type="button" class="btn-modal btn-print-send" onclick="procesarImpresionYEnvio()">Imprimir PDF y Enviar Solicitud</button>
-                <button type="button" class="btn-modal btn-close-modal" onclick="cerrarTaller()">Cerrar</button>
-            </div>
-            <!-- Aquí dentro se cargará dinámicamente el taller seleccionado -->
-            <iframe id="tallerFrame" class="modal-body-iframe" src=""></iframe>
-        </div>
-    </div>
-
-    <!-- =========================================================================
-       SCRIPT DE CONTROL DE CARGA, IMPRESIÓN Y ENVÍO CENTRALIZADO
-       ========================================================================= */ -->
+       SCRIPT REVOLUCIONARIO: INYECTA LOS BOTONES EN LA NUEVA PESTAÑA
+       ========================================================================= -->
     <script>
-        // Abre la ventana modal cargando el archivo del taller correspondiente
         function abrirTaller(urlArchivo) {
-            const modal = document.getElementById('tallerModal');
-            const iframe = document.getElementById('tallerFrame');
-            
-            iframe.src = urlArchivo;
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Evita scroll en el fondo
-        }
+            // 1. Abrimos la pestaña nueva en blanco primero para tener el control del objeto 'window'
+            const nuevaVentana = window.open(urlArchivo, '_blank');
 
-        // Cierra la ventana modal limpiando el iframe
-        function cerrarTaller() {
-            const modal = document.getElementById('tallerModal');
-            const iframe = document.getElementById('tallerFrame');
-            
-            iframe.src = '';
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restaura el scroll
-        }
-
-        // FUNCIÓN CENTRAL: Imprime el formulario del iframe y lo envía a Formspree
-        function procesarImpresionYEnvio() {
-            const iframe = document.getElementById('tallerFrame');
-            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-            const form = iframeDocument.querySelector('form'); // Localiza el formulario dentro del taller
-
-            if (!form) {
-                alert('No se detectó un formulario válido en este taller.');
+            if (!nuevaVentana) {
+                alert("Por favor, permite los pop-ups para abrir los talleres.");
                 return;
             }
 
-            // 1. Lanzar orden de impresión enfocada exclusivamente en el iframe del taller
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
+            // 2. Esperamos a que la pestaña termine de cargar el HTML del taller para inyectarle las acciones
+            nuevaVentana.addEventListener('load', function() {
+                const doc = nuevaVentana.document;
 
-            // 2. Extraer y enviar los datos recopilados por Fetch a la URL de Formspree del formulario
-            const formData = new FormData(form);
+                // --- A) Crear los estilos CSS para la botonera inferior (oculta al imprimir) ---
+                const estilos = doc.createElement('style');
+                estilos.textContent = `
+                    .contenedor-botones-fijos {
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                        margin-top: 40px;
+                        padding: 20px;
+                        background-color: #f5f7fa;
+                        border-top: 1px solid #dcdfe6;
+                    }
+                    .btn-accion {
+                        padding: 12px 24px;
+                        font-size: 1em;
+                        font-weight: bold;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        border: none;
+                        transition: background 0.2s, transform 0.1s;
+                    }
+                    .btn-accion:active {
+                        transform: scale(0.98);
+                    }
+                    .btn-enviar-print {
+                        background-color: #28a745;
+                        color: white;
+                    }
+                    .btn-enviar-print:hover {
+                        background-color: #218838;
+                    }
+                    .btn-cancelar {
+                        background-color: #dc3545;
+                        color: white;
+                    }
+                    .btn-cancelar:hover {
+                        background-color: #c82333;
+                    }
+                    /* Esencial: Oculta la botonera completa cuando se genere el PDF */
+                    @media print {
+                        .contenedor-botones-fijos {
+                            display: none !important;
+                        }
+                    }
+                `;
+                doc.head.appendChild(estilos);
 
-            fetch(form.action, {
-                method: form.method,
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('¡Solicitud enviada correctamente a Formspree y lista para guardar en PDF!');
-                    form.reset(); // Resetea el taller por si quieren hacer otra solicitud
-                    cerrarTaller();
-                } else {
-                    alert('Error: El formulario se imprimió pero no pudo ser procesado por Formspree.');
-                }
-            })
-            .catch(error => {
-                console.error('Error en el envío:', error);
-                alert('Error de red: La solicitud no se pudo enviar a Formspree.');
+                // --- B) Construir la barra de botones HTML ---
+                const barraBotones = doc.createElement('div');
+                barraBotones.className = 'contenedor-botones-fijos';
+
+                const btnEnviar = doc.createElement('button');
+                btnEnviar.type = 'button';
+                btnEnviar.className = 'btn-accion btn-enviar-print';
+                btnEnviar.textContent = 'Imprimir PDF y Enviar Solicitud';
+
+                const btnCancelar = doc.createElement('button');
+                btnCancelar.type = 'button';
+                btnCancelar.className = 'btn-accion btn-cancelar';
+                btnCancelar.textContent = 'Cerrar Pestaña';
+
+                barraBotones.appendChild(btnEnviar);
+                barraBotones.appendChild(btnCancelar);
+
+                // --- C) Insertar la botonera al final del BODY del taller ---
+                doc.body.appendChild(barraBotones);
+
+                // --- D) Asignar funciones lógicas a los botones inyectados ---
+                
+                // Acción de Cerrar Pestaña (Botón Rojo)
+                btnCancelar.onclick = function() {
+                    nuevaVentana.close();
+                };
+
+                // Acción de Imprimir y Enviar (Botón Verde)
+                btnEnviar.onclick = function() {
+                    const form = doc.querySelector('form');
+                    if (!form) {
+                        nuevaVentana.alert('No se detectó un formulario en esta página.');
+                        return;
+                    }
+
+                    // 1. Lanzar la impresión nativa de la nueva pestaña (ocultando los botones por CSS)
+                    nuevaVentana.print();
+
+                    // 2. Capturar datos y enviar por Fetch en segundo plano a Formspree
+                    const formData = new FormData(form);
+
+                    nuevaVentana.fetch(form.action, {
+                        method: form.method,
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            nuevaVentana.alert('¡Formulario enviado con éxito a Formspree y listo para guardar en PDF!');
+                            form.reset();
+                            nuevaVentana.close(); // Cierra automáticamente tras enviar con éxito si quieres
+                        } else {
+                            nuevaVentana.alert('Hubo un problema al procesar el envío en Formspree.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        nuevaVentana.alert('Error de conexión al enviar la solicitud.');
+                    });
+                };
             });
         }
     </script>
