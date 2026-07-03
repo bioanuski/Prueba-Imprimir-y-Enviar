@@ -281,7 +281,7 @@
     </div>
 
     <!-- =========================================================================
-       SCRIPT REVOLUCIONARIO: INYECTA LOS BOTONES EN LA NUEVA PESTAÑA
+       SCRIPT OPTIMIZADO: INYECTA LOS BOTONES LOCALES EN LA NUEVA PESTAÑA
        ========================================================================= -->
     <script>
         function abrirTaller(urlArchivo) {
@@ -351,7 +351,7 @@
                 const btnEnviar = doc.createElement('button');
                 btnEnviar.type = 'button';
                 btnEnviar.className = 'btn-accion btn-enviar-print';
-                btnEnviar.textContent = 'Imprimir PDF y Enviar Solicitud';
+                btnEnviar.textContent = 'Imprimir PDF y Guardar Taller';
 
                 const btnCancelar = doc.createElement('button');
                 btnCancelar.type = 'button';
@@ -371,40 +371,10 @@
                     nuevaVentana.close();
                 };
 
-                // Acción de Imprimir y Enviar (Botón Verde)
+                // Acción de Imprimir Localmente (Botón Verde)
                 btnEnviar.onclick = function() {
-                    const form = doc.querySelector('form');
-                    if (!form) {
-                        nuevaVentana.alert('No se detectó un formulario en esta página.');
-                        return;
-                    }
-
-                    // 1. Lanzar la impresión nativa de la nueva pestaña (ocultando los botones por CSS)
+                    // Lanzar directamente la impresión nativa de la nueva pestaña (ocultando los botones por CSS)
                     nuevaVentana.print();
-
-                    // 2. Capturar datos y enviar por Fetch en segundo plano a Formspree
-                    const formData = new FormData(form);
-
-                    nuevaVentana.fetch(form.action, {
-                        method: form.method,
-                        body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            nuevaVentana.alert('¡Formulario enviado con éxito a Formspree y listo para guardar en PDF!');
-                            form.reset();
-                            nuevaVentana.close(); // Cierra automáticamente tras enviar con éxito si quieres
-                        } else {
-                            nuevaVentana.alert('Hubo un problema al procesar el envío en Formspree.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        nuevaVentana.alert('Error de conexión al enviar la solicitud.');
-                    });
                 };
             });
         }
